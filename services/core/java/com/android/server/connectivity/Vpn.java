@@ -2457,6 +2457,56 @@ public class Vpn {
         }
     }
 
+    @GuardedBy("this")
+    private void updateLockdownNotification(DetailedState networkState) {
+        // TODO:
+        int id = 10;
+
+        boolean connectingOrConnected = networkState == DetailedState.CONNECTING
+                || networkState == DetailedState.CONNECTED;
+
+        boolean noDnsServers = mConfig == null
+                || mConfig.dnsServers == null
+                || mConfig.dnsServers.isEmpty();
+
+        final boolean visible = mLockdown
+                && connectingOrConnected
+                && noDnsServers;
+
+        final UserHandle user = UserHandle.of(mUserId);
+        final long token = Binder.clearCallingIdentity();
+        try {
+            final NotificationManager notificationManager =
+                    mUserIdContext.getSystemService(NotificationManager.class);
+            if (!visible) {
+                // TODO: Message?
+                notificationManager.cancel(TAG, id);
+                return;
+            }
+            final Intent intent = new Intent();
+            intent.setComponent(ComponentName.unflattenFromString(mContext.getString(
+                    R.string.config_customVpnAlwaysOnDisconnectedDialogComponent)));
+            intent.putExtra("lockdown", mLockdown);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            final PendingIntent configIntent = mSystemServices.pendingIntentGetActivityAsUser(
+                    intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT, user);
+            final Notification.Builder builder =
+                    new Notification.Builder(mContext, NOTIFICATION_CHANNEL_VPN)
+                            .setSmallIcon(R.drawable.vpn_connected)
+                            .setContentTitle(mContext.getString(R.string.vpn_lockdown_disconnected))
+                            .setContentText(mContext.getString(R.string.vpn_lockdown_config))
+                            .setContentIntent(configIntent)
+                            .setCategory(Notification.CATEGORY_SYSTEM)
+                            .setVisibility(Notification.VISIBILITY_PUBLIC)
+                            .setOngoing(true)
+                            .setColor(mContext.getColor(
+                                    android.R.color.system_notification_accent_color));
+            notificationManager.notify(TAG, SystemMessage.NOTE_VPN_DISCONNECTED, builder.build());
+        } finally {
+            Binder.restoreCallingIdentity(token);
+        }
+    }
+
     /**
      * Facade for system service calls that change, or depend on, state outside of
      * {@link ConnectivityService} and have hard-to-mock interfaces.
