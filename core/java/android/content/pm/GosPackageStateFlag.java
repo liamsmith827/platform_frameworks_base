@@ -6,7 +6,12 @@ import android.annotation.SystemApi;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** @hide */
+/**
+ * GosPackageStateFlag defines the valid flags for GosPackageState. Flags that are defined here must
+ * also be marked as readable/writable in GosPackageStatePermissions in order to be usable.
+ *
+ * @hide
+ */
 @SystemApi
 public interface GosPackageStateFlag {
     /* SysApi */ int STORAGE_SCOPES_ENABLED = 0;
@@ -36,6 +41,8 @@ public interface GosPackageStateFlag {
     /** @hide */ int PLAY_INTEGRITY_API_USED_AT_LEAST_ONCE = 26;
     /** @hide */ int SUPPRESS_PLAY_INTEGRITY_API_NOTIF = 27;
     /** @hide */ int BLOCK_PLAY_INTEGRITY_API = 28;
+    /** @hide */ int ALLOW_SOCKET_BIND_TO_DEVICE_NON_DEFAULT = 29;
+    /** @hide */ int ALLOW_SOCKET_BIND_TO_DEVICE = 30;
 
     /** @hide */
     @IntDef(value = {
@@ -64,6 +71,8 @@ public interface GosPackageStateFlag {
             PLAY_INTEGRITY_API_USED_AT_LEAST_ONCE,
             SUPPRESS_PLAY_INTEGRITY_API_NOTIF,
             BLOCK_PLAY_INTEGRITY_API,
+            ALLOW_SOCKET_BIND_TO_DEVICE_NON_DEFAULT,
+            ALLOW_SOCKET_BIND_TO_DEVICE,
     })
     @Retention(RetentionPolicy.SOURCE)
     @interface Enum {}
