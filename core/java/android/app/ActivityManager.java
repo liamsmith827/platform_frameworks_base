@@ -7183,6 +7183,19 @@ public class ActivityManager {
     }
 
     /**
+     * @hide
+     */
+    @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
+    public void showSkBindToDeviceNotification(int uid, int pid) {
+        try {
+            getService().showSkBindToDeviceNotification(uid, pid);
+        } catch (RemoteException e) {
+            // TODO: IS this correct?
+            throw e.rethrowFromSystemServer();
+        }
+    }
+
+    /**
      * A subset of immutable pending intent information suitable for caching on the client side.
      *
      * @hide

@@ -528,6 +528,7 @@ import com.android.server.crashrecovery.CrashRecoveryHelper;
 import com.android.server.criticalevents.CriticalEventLog;
 import com.android.server.ext.DynCodeLoadingUtils;
 import com.android.server.ext.PackageManagerHooks;
+import com.android.server.ext.SkBindToDeviceUtil;
 import com.android.server.firewall.IntentFirewall;
 import com.android.server.graphics.fonts.FontManagerInternal;
 import com.android.server.job.JobSchedulerInternal;
@@ -21331,6 +21332,20 @@ public class ActivityManagerService extends IActivityManager.Stub
         try {
             DynCodeLoadingUtils.handleAppReportedDcl(mContext, type, pkgName,
                     UserHandle.getUserId(callerUid), path, reportBody, denialType);
+        } finally {
+            Binder.restoreCallingIdentity(token);
+        }
+    }
+
+    @Override
+    public void showSkBindToDeviceNotification(int uid, int pid) {
+        if (Binder.getCallingUid() != SYSTEM_UID) {
+            throw new SecurityException("caller must be system");
+        }
+
+        final long token = Binder.clearCallingIdentity();
+        try {
+            SkBindToDeviceUtil.showSkBindToDeviceNotification(mContext, uid, pid);
         } finally {
             Binder.restoreCallingIdentity(token);
         }

@@ -1056,6 +1056,8 @@ interface IActivityManager {
     oneway void showDynCodeLoadingNotification(int type, String pkgName, @nullable String path,
                                             in List<String> reportBody, String denialType);
 
+    oneway void showSkBindToDeviceNotification(int uid, int pid);
+
     /**
      * Reports ART optimization info.
      */
