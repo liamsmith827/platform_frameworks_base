@@ -21,6 +21,7 @@ import android.annotation.FlaggedApi;
 import android.annotation.IntDef;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
+import android.annotation.SystemApi;
 import android.compat.annotation.UnsupportedAppUsage;
 
 import java.io.FileDescriptor;
@@ -281,6 +282,7 @@ public interface IBinder {
      * @throws RemoteException
      * @hide
      */
+    @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
     public default @Nullable IBinder getExtension() throws RemoteException {
         throw new IllegalStateException("Method is not implemented");
     }

@@ -104,6 +104,7 @@ package android.content {
 
   public abstract class ContentProvider implements android.content.ComponentCallbacks2 {
     method @NonNull public static android.net.Uri createContentUriForUser(@NonNull android.net.Uri, @NonNull android.os.UserHandle);
+    method public static int getUserIdFromUri(@Nullable android.net.Uri, int);
   }
 
   public abstract class ContentResolver {
@@ -161,8 +162,14 @@ package android.content.pm {
 package android.ext {
 
   public class ConnectivityUtil {
+    method public static boolean isLockdownVpnEnabled(@NonNull android.content.Context, int);
     method public static boolean isRegularAppWithLockdownVpnEnabled(@NonNull android.content.Context, int);
     method public static boolean isSystem(@NonNull android.content.Context, int);
+  }
+
+  public enum ConnectivityUtil.NetworkType {
+    enum_constant public static final android.ext.ConnectivityUtil.NetworkType PHYSICAL;
+    enum_constant public static final android.ext.ConnectivityUtil.NetworkType VPN;
   }
 
 }
@@ -423,6 +430,10 @@ package android.os {
     method @RequiresPermission(anyOf={android.net.NetworkStack.PERMISSION_MAINLINE_NETWORK_STACK, android.Manifest.permission.NETWORK_STACK}) public void reportNetworkInterfaceForTransports(@NonNull String, @NonNull int[]) throws java.lang.RuntimeException;
   }
 
+  public class Binder implements android.os.IBinder {
+    method @Nullable public final android.os.IBinder getExtension();
+  }
+
   public class BluetoothServiceManager {
     method @NonNull public android.os.BluetoothServiceManager.ServiceRegisterer getBluetoothManagerServiceRegisterer();
   }
@@ -457,6 +468,10 @@ package android.os {
     method @FlaggedApi("android.os.mainline_vcn_platform_api") public final boolean hasMessagesOrCallbacks();
     method @FlaggedApi("android.os.mainline_vcn_platform_api") public final void removeCallbacksAndEqualMessages(@Nullable Object);
     method @FlaggedApi("android.os.mainline_vcn_platform_api") public final void removeEqualMessages(int, @Nullable Object);
+  }
+
+  public interface IBinder {
+    method @Nullable public default android.os.IBinder getExtension() throws android.os.RemoteException;
   }
 
   public class IpcDataCache<Query, Result> {
@@ -639,6 +654,8 @@ package android.provider {
   }
 
   public static final class Settings.Secure extends android.provider.Settings.NameValueTable {
+    method @Nullable public static String getStringForUser(@NonNull android.content.ContentResolver, @NonNull String, int);
+    method public static boolean putStringForUser(@NonNull android.content.ContentResolver, @NonNull String, @Nullable String, int);
     field public static final String BLUETOOTH_ADDRESS = "bluetooth_address";
     field public static final String BLUETOOTH_ADDR_VALID = "bluetooth_addr_valid";
     field public static final String BLUETOOTH_NAME = "bluetooth_name";
