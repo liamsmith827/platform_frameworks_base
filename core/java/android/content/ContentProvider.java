@@ -2919,7 +2919,8 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
 
     /** @hide */
     @RavenwoodKeep
-    public static int getUserIdFromUri(Uri uri, int defaultUserId) {
+    @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
+    public static int getUserIdFromUri(@Nullable Uri uri, int defaultUserId) {
         if (uri == null) return defaultUserId;
         return getUserIdFromAuthority(uri.getAuthority(), defaultUserId);
     }

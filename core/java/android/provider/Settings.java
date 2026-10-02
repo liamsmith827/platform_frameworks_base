@@ -7710,8 +7710,11 @@ public final class Settings {
 
         /** @hide */
         @UnsupportedAppUsage
-        public static String getStringForUser(ContentResolver resolver, String name,
-                @CanBeCURRENT @UserIdInt int userId) {
+        @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
+        @Nullable
+        // TODO: This is not nullable but method in ConnectivitySettingsManager wrongly assumes it is.
+        public static String getStringForUser(@NonNull ContentResolver resolver,
+                @NonNull String name, @CanBeCURRENT @UserIdInt int userId) {
             if (MOVED_TO_GLOBAL.contains(name)) {
                 Log.w(TAG, "Setting " + name + " has moved from android.provider.Settings.Secure"
                         + " to android.provider.Settings.Global.");
@@ -7773,8 +7776,9 @@ public final class Settings {
 
         /** @hide */
         @UnsupportedAppUsage
-        public static boolean putStringForUser(ContentResolver resolver, String name, String value,
-                @CanBeCURRENT @UserIdInt int userId) {
+        @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
+        public static boolean putStringForUser(@NonNull ContentResolver resolver,
+                @NonNull String name, @Nullable String value, @CanBeCURRENT @UserIdInt int userId) {
             return putStringForUser(resolver, name, value, null, false, userId,
                     DEFAULT_OVERRIDEABLE_BY_RESTORE);
         }
@@ -8164,6 +8168,38 @@ public final class Settings {
                 @CanBeCURRENT @UserIdInt int userId) {
             return putStringForUser(cr, name, Float.toString(value), userId);
         }
+
+        // TODO: Put these into the dump output (see top of Secure class).
+        /**
+         * Equivalent to {@link android.provider.Settings.Global#PRIVATE_DNS_MODE}, but applies to
+         * a user's virtual networks, not the global physical network.
+         *
+         * @hide
+         */
+        // TODO: Eliminate @Readable such that apps can only read PRIVATE_DNS_MODE and then add
+        // code to map it to VIRTUAL_PRIVATE_DNS_MODE depending on VPN settings. Do this for all.
+        // Verify that @Readable actually matters.
+        @Readable
+        public static final String VPN_PRIVATE_DNS_MODE = "vpn_private_dns_mode";
+
+        /**
+         * Equivalent to {@link android.provider.Settings.Global#PRIVATE_DNS_SPECIFIER}, but applies
+         * to a user's virtual networks, not the global physical network.
+         *
+         * @hide
+         */
+        @Readable
+        public static final String VPN_PRIVATE_DNS_SPECIFIER = "vpn_private_dns_specifier";
+
+        /**
+         * Equivalent to {@link android.provider.Settings.Global#PRIVATE_DNS_DEFAULT_MODE}, but
+         * applies to a user's virtual networks, not the global physical network.
+         *
+         * @hide
+         */
+        @Readable
+        public static final String VPN_PRIVATE_DNS_DEFAULT_MODE =
+                "vpn_private_dns_default_mode";
 
         /**
          * Control whether to enable adaptive sleep mode.

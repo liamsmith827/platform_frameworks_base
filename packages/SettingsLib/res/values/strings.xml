@@ -790,8 +790,10 @@
     <string name="bluetooth_select_a2dp_codec_streaming_label">Streaming: <xliff:g id="streaming_parameter">%1$s</xliff:g></string>
 
     <!-- Developer option setting for Private DNS -->
-    <string name="select_private_dns_configuration_title">Private DNS</string>
-    <string name="select_private_dns_configuration_dialog_title">Select Private DNS Mode</string>
+    <string name="select_physical_private_dns_configuration_title">Private DNS (Physical)</string>
+    <string name="select_physical_private_dns_configuration_dialog_title">Private DNS (Physical)</string>
+    <string name="select_vpn_private_dns_configuration_title">Private DNS (VPN)</string>
+    <string name="select_vpn_private_dns_configuration_dialog_title">Private DNS (VPN)</string>
     <string name="private_dns_mode_off">Off</string>
     <string name="private_dns_mode_opportunistic">Automatic</string>
     <string name="private_dns_mode_provider">Private DNS provider hostname</string>
